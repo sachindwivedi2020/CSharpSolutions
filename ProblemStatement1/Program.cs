@@ -9,6 +9,11 @@
     /// intended to be instantiated or used directly by external code.</remarks>
     internal class Program
     {
+        private readonly ProductRepository _productRepository;
+        public Program()
+        {
+            _productRepository = new ProductRepository();
+        }
         /// <summary>
         /// Serves as the entry point for the application.
         /// </summary>
@@ -136,9 +141,90 @@
                 if (!int.TryParse(input, out int number))
                     continue; //Ask Again
 
+                if (number == 1 || number == 2 || number == 3 || number == 4)
+                {
+                    switch (number)
+                    {
+                        case 1:
+                            AddProduct();
+                            break;
+                        case 2:
+                            ShowProducts();
+                            break;
+                        case 3:
+                            RemoveProduct();
+                            break;
+                        case 4:
+                            UpdateProduct();
+                            break;
+                        default:
+                            break;
+                    }
+                }
                 if (number == 0)
                     break; //Exit the loop
 
+            }
+        }
+        private void ShowProducts()
+        {
+            var products = _productRepository.GetAllProducts();
+            Console.WriteLine("Available Products:");
+            foreach (var product in products)
+            {
+                Console.WriteLine($"ID: {product.Id}, Name: {product.Name}, Price: {product.Price}, Available Quantity: {product.AvailableQuantity}");
+            }
+        }
+        private void ProductFormInput(out int id, out string name, out decimal price, out int quantity)
+        {
+            Console.WriteLine("Enter Product Details:");
+            Console.Write("ID: ");
+            id = int.Parse(Console.ReadLine());
+            Console.Write("Name: ");
+            name = Console.ReadLine();
+            Console.Write("Price: ");
+            price = decimal.Parse(Console.ReadLine());
+            Console.Write("Available Quantity: ");
+            quantity = int.Parse(Console.ReadLine());
+        }
+        private void AddProduct()
+        {
+            ProductFormInput(out int id, out string name, out decimal price, out int quantity);
+            var product = new Product
+            {
+                Id = id,
+                Name = name,
+                Price = price,
+                AvailableQuantity = quantity
+            };
+            _productRepository.AddProduct(product);
+            Console.WriteLine("Product added successfully.");
+        }
+        private void RemoveProduct()
+        {
+            Console.Write("Enter Product ID to remove: ");
+            int id = int.Parse(Console.ReadLine());
+            _productRepository.DeleteProduct(id);
+            Console.WriteLine("Product removed successfully.");
+        }
+        private void UpdateProduct()
+        {
+            ProductFormInput(out int id, out string name, out decimal price, out int quantity);
+            var product = new Product
+            {
+                Id = id,
+                Name = name,
+                Price = price,
+                AvailableQuantity = quantity
+            };
+            bool isUpdated = _productRepository.UpdateProduct(product);
+            if (isUpdated)
+            {
+                Console.WriteLine("Product updated successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Product not found.");
             }
         }
     }

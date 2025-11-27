@@ -1,0 +1,2 @@
+--Use Tuples for multiple return values
+--Use Out parameters for multiple return values

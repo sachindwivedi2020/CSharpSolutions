@@ -119,7 +119,7 @@
                     attempts--;
                     Console.WriteLine($"Wrong username or password and You have {attempts} attempts left.");
                     if (attempts <= 3)
-                        LoginScreen();
+                        userInput = LoginScreen();
                     else
                         return 0;
 
@@ -138,7 +138,7 @@
             while (true)
             {
                 Console.WriteLine("Enter a number");
-                string input = Console.ReadLine();
+                string? input = Console.ReadLine();
                 if (!int.TryParse(input, out int number))
                     continue; //Ask Again
 
@@ -147,16 +147,16 @@
                     switch (number)
                     {
                         case 1:
-                            AddProduct();
+                            _productService.AddProduct();
                             break;
                         case 2:
-                            ShowProducts();
+                            _productService.GetAllProducts();
                             break;
                         case 3:
-                            RemoveProduct();
+                            _productService.DeleteProduct(number);
                             break;
                         case 4:
-                            UpdateProduct();
+                            _productService.UpdateProduct();
                             break;
                         default:
                             break;
@@ -167,70 +167,6 @@
 
             }
         }
-        private void ShowProducts()
-        {
-            var products = _productService.GetAllProducts();
-            Console.WriteLine("Available Products:");
-            foreach (var product in products)
-            {
-                Console.WriteLine($"ID: {product.Id}, Name: {product.Name}, Price: {product.Price}, Available Quantity: {product.AvailableQuantity}");
-            }
-        }
-        private void ProductFormInput(out int id, out string name, out decimal price, out int quantity)
-        {
-            Console.WriteLine("Enter Product Details:");
-            Console.Write("ID: ");
-            id = int.Parse(Console.ReadLine());
-            Console.Write("Name: ");
-            name = Console.ReadLine();
-            Console.Write("Price: ");
-            price = decimal.Parse(Console.ReadLine());
-            Console.Write("Available Quantity: ");
-            quantity = int.Parse(Console.ReadLine());
-        }
-        private void AddProduct()
-        {
-            ProductFormInput(out int id, out string name, out decimal price, out int quantity);
-            var product = new Product
-            {
-                Id = id,
-                Name = name,
-                Price = price,
-                AvailableQuantity = quantity
-            };
-            _productService.AddProduct(product);
-            Console.WriteLine("Product added successfully.");
-        }
-        private void RemoveProduct()
-        {
-            Console.Write("Enter Product ID to remove: ");
-            int id = int.Parse(Console.ReadLine());
-            var productResult = _productService.DeleteProduct(id);
-            if (!productResult)
-            {
-                Console.WriteLine("Product not found.");
-            }
-            Console.WriteLine("Product removed successfully.");
-        }
-        private void UpdateProduct()
-        {
-            ProductFormInput(out int id, out string name, out decimal price, out int quantity);
-            var product = new Product
-            {
-                Id = id,
-                Name = name,
-                Price = price,
-                AvailableQuantity = quantity
-            };
-            bool isUpdated = _productService.UpdateProduct(product);
-            if (isUpdated)
-            {
-                Console.WriteLine("Product updated successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Product not found.");
-            }
-        }
+
     }
 }

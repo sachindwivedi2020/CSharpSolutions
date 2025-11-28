@@ -13,7 +13,7 @@
         public Program()
         {
             // Use the product service which performs validations and delegates to the repository
-            _productService = new ProductService();
+            _productService = new ProductService(new ProductRepository());
         }
         /// <summary>
         /// Serves as the entry point for the application.

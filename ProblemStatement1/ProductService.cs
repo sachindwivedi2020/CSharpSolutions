@@ -8,9 +8,9 @@ namespace ProblemStatement1
     {
        private readonly IProductRepository _productRepository;
 
-        public ProductService()
+        public ProductService(IProductRepository productRepository)
         {
-            _productRepository =new ProductRepository();
+            _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
         }
 
         public List<Product> GetAllProducts()=> _productRepository.GetAllProducts();

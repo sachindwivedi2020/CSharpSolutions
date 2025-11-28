@@ -1,2 +1,6 @@
 --Use Tuples for multiple return values
 --Use Out parameters for multiple return values
+
+
+-- Main Program Use the product service which performs validations and delegates to the repository
+--Then repository handles data storage and retrieval

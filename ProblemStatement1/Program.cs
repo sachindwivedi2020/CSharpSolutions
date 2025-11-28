@@ -9,10 +9,11 @@
     /// intended to be instantiated or used directly by external code.</remarks>
     internal class Program
     {
-        private readonly ProductRepository _productRepository;
+        private readonly ProductService _productService;
         public Program()
         {
-            _productRepository = new ProductRepository();
+            // Use the product service which performs validations and delegates to the repository
+            _productService = new ProductService();
         }
         /// <summary>
         /// Serves as the entry point for the application.
@@ -168,7 +169,7 @@
         }
         private void ShowProducts()
         {
-            var products = _productRepository.GetAllProducts();
+            var products = _productService.GetAllProducts();
             Console.WriteLine("Available Products:");
             foreach (var product in products)
             {
@@ -197,14 +198,18 @@
                 Price = price,
                 AvailableQuantity = quantity
             };
-            _productRepository.AddProduct(product);
+            _productService.AddProduct(product);
             Console.WriteLine("Product added successfully.");
         }
         private void RemoveProduct()
         {
             Console.Write("Enter Product ID to remove: ");
             int id = int.Parse(Console.ReadLine());
-            _productRepository.DeleteProduct(id);
+            var productResult = _productService.DeleteProduct(id);
+            if (!productResult)
+            {
+                Console.WriteLine("Product not found.");
+            }
             Console.WriteLine("Product removed successfully.");
         }
         private void UpdateProduct()
@@ -217,7 +222,7 @@
                 Price = price,
                 AvailableQuantity = quantity
             };
-            bool isUpdated = _productRepository.UpdateProduct(product);
+            bool isUpdated = _productService.UpdateProduct(product);
             if (isUpdated)
             {
                 Console.WriteLine("Product updated successfully.");

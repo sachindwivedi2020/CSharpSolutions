@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProblemStatement1
 {
-    internal class ProductRepository
+    internal class ProductRepository:IProductRepository
     {
         static List<Product> products = new List<Product>()
         {
@@ -22,13 +22,15 @@ namespace ProblemStatement1
         {
             products.Add(product);
         }
-        public void DeleteProduct(int productId)
+        public bool DeleteProduct(int productId)
         {
             var product = products.Find(p => p.Id == productId);
             if (product != null)
             {
                 products.Remove(product);
+                return true;
             }
+            return false;
         }
         public bool UpdateProduct(Product product)
         {
